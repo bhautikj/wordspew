@@ -59,6 +59,12 @@ phrasePatterns = [ "adverb verb adjective noun",
 
 relpath = "."
 
+TITLE = 'title'
+UPPER = 'upper'
+
+class CaseError(Exception):
+  pass
+
 # __init__.py will set the library path so we can access the word lists
 def setRelpath(path):
   global relpath
@@ -90,7 +96,7 @@ def getWord(wordType):
   
   return result
 
-def getPhrase():
+def getPhrase(case=None):
   # pick a random phrase pattern
   nPhrases = len(phrasePatterns)
   phrase = phrasePatterns[int(random.random()*nPhrases)]
@@ -102,6 +108,14 @@ def getPhrase():
     sub = word
     if word in worddb.keys():
       sub = getWord(word)
+    if case is None:
+      pass
+    elif case == TITLE:
+      sub = sub.title()
+    elif case == UPPER:
+      sub = sub.upper()
+    else:
+      raise CaseError("Unsupported character case '%s'" % case)
     retList.append(sub)
     
   # join and return
